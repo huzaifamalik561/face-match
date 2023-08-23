@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Face Matching App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .form-container {
+            border: 2px solid #3498db;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .image-section {
+            margin-top: 20px;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .image-container img {
+            max-width: 40%;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            margin: 10px;
+        }
+
+        .distance-section {
+            margin-top: 20px;
+        }
+
+        .distance {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Face Matching App</h1>
+        </div>
+        <div class="form-container">
+            <form action="/match" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="id_card_image">Upload ID Card Image:</label>
+                    <input type="file" class="form-control-file" name="id_card_image" accept="image/*" required>
+                </div>
+                <div class="form-group">
+                    <label for="user_image">Upload User Image:</label>
+                    <input type="file" class="form-control-file" name="user_image" accept="image/*" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Match</button>
+            </form>
+        </div>
+        {% if result %}
+        <div class="result">{{ result }}</div>
+        {% endif %}
+        <div class="image-section">
+            <div class="image-container">
+                {% if id_card_faces %}
+                    <div class="original-image">
+                        <h2>Extracted Faces from ID Card Image</h2>
+                        {% for face_base64 in id_card_faces %}
+                            <img src="data:image/jpeg;base64,{{ face_base64 }}" alt="Extracted Face">
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="image-container">
+                {% if user_faces %}
+                    <div class="original-image">
+                        <h2>Extracted Faces from User Image</h2>
+                        {% for face_base64 in user_faces %}
+                            <img src="data:image/jpeg;base64,{{ face_base64 }}" alt="Extracted Face">
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if user_image_with_faces %}
+                    <div class="extracted-face">
+                        <h2>Extracted Face from User Image</h2>
+                        <img src="data:image/jpeg;base64,{{ user_image_with_faces }}" alt="Extracted Face">
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="distance-section">
+            {% if distance_id_card %}
+                <div class="distance">
+                    <h2>Distance between the Eyes (ID Card Image):</h2>
+                    <p>{{ distance_id_card }} mm</p>
+                </div>
+            {% endif %}
+            {% if distance_user %}
+                <div class="distance">
+                    <h2>Distance between the Eyes (User Image):</h2>
+                    <p>{{ distance_user }} mm</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
