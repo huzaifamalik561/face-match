@@ -31,7 +31,7 @@ Usage
 Run the application:
 
 bash
-python app.py
+python face-match.py
 Open a web browser and navigate to http://127.0.0.1:5000/.
 
 Upload an ID card image and a user image.
